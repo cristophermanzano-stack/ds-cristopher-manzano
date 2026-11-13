@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Design system para un explorador periodístico de tasas de desempleo regional en Chile.">
+<title>Design system · Explorador de desempleo regional</title>
+<style>
+:root{
+  --paper:#F7F4EE;--ink:#1B1B1F;--accent:#B42318;--gray:#5B6068;
+  --line:#C9C4B8;--white:#FFFFFF;
+  --map-1:#FBE3E0;--map-2:#F4B8B0;--map-3:#E88B80;--map-4:#C8402F;--map-5:#B42318;
+  --font-display:Georgia,serif;--font-ui:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;
+  --border:2px;--radius:12px;--shadow:0 4px 18px rgba(27,27,31,.08);
+  --content:760px;--max:1000px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-ui);font-size:16px;line-height:1.55}
+button,input,select{font:inherit}
+a{color:var(--accent);text-underline-offset:3px}
+button{min-height:44px;border:var(--border) solid var(--accent);border-radius:var(--radius);padding:9px 16px;background:var(--accent);color:#fff;font-weight:650;cursor:pointer}
+button.secondary{background:transparent;color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,.region:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+header.topbar{position:sticky;top:0;z-index:20;background:rgba(247,244,238,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:var(--max);margin:auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:var(--font-display);font-size:22px;font-weight:700;text-decoration:none;color:var(--ink)}
+.top-actions{display:flex;gap:8px;align-items:center}
+.menu-toggle{display:none;background:transparent;color:var(--ink);border-color:var(--line)}
+.layout{max-width:var(--max);margin:auto;padding:24px 20px 80px;display:grid;grid-template-columns:190px minmax(0,1fr);gap:28px}
+nav.index{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 96px);overflow:auto;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:#fff}
+nav.index strong{display:block;margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--gray)}
+nav.index a{display:block;padding:7px 8px;color:var(--ink);font-size:13px;text-decoration:none;border-radius:7px}
+nav.index a:hover,nav.index a.active{background:var(--paper);color:var(--accent)}
+main{min-width:0}
+section{padding:28px 0 40px;border-bottom:1px solid var(--line);scroll-margin-top:84px}
+section:first-child{padding-top:4px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:750;color:var(--accent)}
+h1,h2,h3,.number{font-family:var(--font-display);font-weight:400;line-height:1.15}
+h1{font-size:44px;margin:8px 0 12px}h2{font-size:32px;margin:8px 0 16px}h3{font-size:22px;margin:8px 0}
+p{margin:8px 0 14px}small,.muted{color:var(--gray)}
+.lead{font-size:18px;max-width:70ch}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.soft{background:var(--paper)}
+.grid{display:grid;gap:12px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.spread{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.number{font-size:64px;letter-spacing:-.04em}
+.number.small{font-size:36px}
+.tag{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;background:#eee;color:var(--ink)}
+.tag.example{background:#fff0c2;color:#684b00}
+.tag.ok{background:#e7f3e9;color:#1c6330}
+.tag.error{background:#fde8e7;color:#8b1710}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);font-weight:750}
+select,input{width:100%;min-height:44px;border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:#fff;color:var(--ink)}
+.field{display:grid;gap:5px}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--gray)}
+td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
+.table-wrap table{min-width:470px}
+.swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.swatch{height:48px;border-radius:7px;border:1px solid rgba(0,0,0,.08)}
+.token{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:9px 0;font-size:14px}
+.copy{min-height:34px;padding:4px 9px;font-size:12px;background:#fff;color:var(--ink);border:1px solid var(--line)}
+.map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:var(--radius)}
+.region{min-height:58px;border:1px solid rgba(27,27,31,.2);border-radius:8px;padding:7px;background:var(--map-2);text-align:left;color:var(--ink);cursor:pointer}
+.region:nth-child(5n+1){background:var(--map-1)}.region:nth-child(5n+2){background:var(--map-2)}.region:nth-child(5n+3){background:var(--map-3)}.region:nth-child(5n+4){background:var(--map-4);color:#fff}.region:nth-child(5n){background:var(--map-5);color:#fff}
+.region[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:2px}
+.region b{display:block;font-size:12px}.region span{font-size:12px}
+.legend{display:flex;gap:5px;align-items:center}.legend i{height:14px;flex:1;border-radius:3px}
+.skeleton{background:linear-gradient(90deg,#e8e5de 25%,#f4f1eb 50%,#e8e5de 75%);background-size:200% 100%;animation:shine 1.3s infinite;border-radius:6px}
+@keyframes shine{to{background-position:-200% 0}}
+.state-box{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;min-height:130px}
+.chart{width:100%;height:auto;display:block;background:#fff;border-radius:10px}
+.note{border-left:4px solid var(--accent);padding:10px 14px;background:#fff}
+.footer{background:var(--ink);color:#fff;padding:24px;border-radius:var(--radius);margin-top:20px}
+.footer a{color:#ffd1cb}
+.checklist{display:grid;gap:9px}
+.checklist label{display:flex;gap:9px;align-items:flex-start}
+.checklist input{width:18px;min-height:18px;margin-top:4px}
+.preview-shell{background:#e8e5de;border-radius:16px;padding:10px;max-width:390px;margin:auto}
+.preview-page{background:var(--paper);padding:16px;border-radius:10px}
+.preview-wide{max-width:760px;margin:auto}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.status-line{font-size:13px;color:var(--gray);min-height:20px}
+@media(min-width:900px){.map{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){
+ .layout{display:block;padding:16px 14px 60px}
+ nav.index{display:none;position:fixed;left:12px;right:12px;top:64px;z-index:30;max-height:70vh;box-shadow:var(--shadow)}
+ nav.index.open{display:block}
+ .menu-toggle{display:inline-flex}
+ h1{font-size:36px}h2{font-size:28px}.number{font-size:44px}
+ .three{grid-template-columns:1fr 1fr}
+ .topbar-inner{padding:10px 14px}
+}
+@media(max-width:420px){.two{grid-template-columns:1fr 1fr}.map{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:14px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#producto">Explorador regional <span style="color:var(--accent)">/</span> Design system</a>
+    <div class="top-actions">
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteIndex">Índice</button>
+      <button class="secondary" id="copyAllTokens">Copiar tokens</button>
+    </div>
+  </div>
+</header>
+<div class="layout">
+<nav class="index" id="siteIndex" aria-label="Índice de secciones">
+<strong>Índice del sistema</strong>
+<a href="#producto">01 · El producto</a><a href="#principios">02 · Principios</a><a href="#tokens">03 · Tokens</a>
+<a href="#atomos">04 · Átomos</a><a href="#moleculas">05 · Moléculas</a><a href="#organismos">06 · Organismos</a>
+<a href="#plantillas">07 · Plantillas y páginas</a><a href="#estados">08 · Estados</a><a href="#datos-voz">09 · Datos y voz</a><a href="#accesibilidad">10 · Accesibilidad e IA</a>
+</nav>
+<main>
+<section id="producto">
+<div class="eyebrow">01 / El producto</div>
+<h1>Una lectura clara del desempleo regional en Chile</h1>
+<p class="lead">Un explorador periodístico que convierte las cifras de la Encuesta Nacional de Empleo del INE en información regional comprensible, comparable y trazable.</p>
+<div class="card">
+<h3>El producto en ocho puntos</h3>
+<ol>
+<li><b>Audiencia:</b> personas que necesitan comprender el mercado laboral de su región, como quienes buscan su primer empleo.</li>
+<li><b>Problema:</b> la información oficial está en boletines extensos y técnicos.</li>
+<li><b>Promesa:</b> conocer la tasa regional, su variación interanual y su relación con el promedio nacional.</li>
+<li><b>Primera pantalla:</b> región, tasa, comparaciones y mapa de las 16 regiones.</li>
+<li><b>Acciones:</b> elegir región, comparar y descargar datos CSV.</li>
+<li><b>Automatización:</b> un agente vigila publicaciones del INE, extrae cifras y prepara una nota.</li>
+<li><b>Límites:</b> no entrega datos comunales, causas, proyecciones ni recomendaciones laborales.</li>
+<li><b>Confianza:</b> cada cifra incluye fuente, período y acceso al boletín; cada nota identifica a quien la aprobó y declara el uso de IA.</li>
+</ol>
+</div>
+<div class="note"><b>Regla editorial:</b> la IA nunca publica por sí sola. Una persona revisa y aprueba cada contenido.</div>
+<h3>Boceto de referencia</h3>
+<p class="muted">Coloca el archivo original <code>boceto.png</code> junto a este HTML para mostrarlo aquí. No se ha reconstruido ni sustituido por una imagen genérica.</p>
+<img src="boceto.png" alt="Boceto a mano de una interfaz móvil para consultar el desempleo regional en Chile. En la parte superior aparecen el nombre del producto y la región. Debajo se muestra la tasa de desempleo, el trimestre móvil y la fuente INE; siguen dos tarjetas comparativas, el explorador de regiones, la descarga de datos y la información de aprobación y uso de inteligencia artificial." style="max-width:100%;height:auto;border:1px solid var(--line);border-radius:12px" onerror="this.hidden=true;document.getElementById('sketchMissing').hidden=false">
+<p id="sketchMissing" class="muted" hidden>Archivo boceto.png no disponible en la misma carpeta. El texto alternativo anterior describe el contenido previsto.</p>
+</section>
+
+<section id="principios">
+<div class="eyebrow">02 / Principios</div><h2>Reglas que gobiernan el diseño</h2>
+<div class="grid two">
+<div class="card"><h3>01. Cifra antes que diseño</h3><p>La tasa y sus comparaciones deben ser lo primero que se entiende.</p></div>
+<div class="card"><h3>02. Transparencia</h3><p>Cada cifra debe mostrar su fuente y trimestre móvil.</p></div>
+<div class="card"><h3>03. Claridad sin interpretación</h3><p>Informar variaciones sin atribuir causas ni emitir juicios.</p></div>
+<div class="card"><h3>04. Las 16 regiones</h3><p>La exploración territorial se realiza mediante un mapa geográfico.</p></div>
+<div class="card"><h3>05. Supervisión humana</h3><p>La IA prepara; una persona revisa y aprueba.</p></div>
+<div class="card"><h3>06. Primero teléfono</h3><p>Diseño mobile first y adaptación a escritorio.</p></div>
+</div>
+</section>
+
+<section id="tokens">
+<div class="eyebrow">03 / Tokens</div><h2>Fundamentos visuales</h2>
+<p>Los tokens definen una base común para todos los componentes. Haz clic en «Copiar» para copiar cada valor.</p>
+<h3>Colores principales</h3><div id="colorTokens" class="card"></div>
+<h3>Escala cromática del mapa</h3>
+<div class="card"><div class="swatches"><div><div class="swatch" style="background:#FBE3E0"></div><small>#FBE3E0</small></div><div><div class="swatch" style="background:#F4B8B0"></div><small>#F4B8B0</small></div><div><div class="swatch" style="background:#E88B80"></div><small>#E88B80</small></div><div><div class="swatch" style="background:#C8402F"></div><small>#C8402F</small></div><div><div class="swatch" style="background:#B42318"></div><small>#B42318</small></div></div><p class="muted">Escala relativa a la distribución de las tasas regionales del período consultado. Los límites se calculan con datos reales disponibles.</p></div>
+<h3>Tipografía</h3><div class="card"><p><b>Georgia:</b> cifras y títulos.</p><p><b>system-ui:</b> navegación, etiquetas, párrafos, controles y tablas.</p><div class="number">8,4 %</div><p class="muted">Muestra de cifra principal.</p></div>
+<h3>Escala tipográfica y espaciado</h3>
+<div class="grid two"><div class="card"><b>Tamaños</b><p>12 · 14 · 16 · 20 · 28 · 44 · 64 px</p><b>Espaciado</b><p>4 · 8 · 12 · 16 · 24 · 32 · 48 px</p></div><div class="card"><b>Bordes</b><p>2 px · radio 12 px</p><b>Sombra</b><p>Suave, de baja elevación.</p><b>Anchos</b><p>Teléfono 390 px · contenido escritorio 760 px · máximo 1000 px.</p></div></div>
+<h3>Contraste de tokens</h3><div class="card"><p>Relación calculada mediante JavaScript según la fórmula WCAG de luminancia relativa. Mínimo para texto normal: 4,5:1.</p><div class="table-wrap"><table id="contrastTable"><thead><tr><th>Texto</th><th>Fondo</th><th>Relación</th><th>Resultado</th></tr></thead><tbody></tbody></table></div><p class="muted" id="contrastSummary" aria-live="polite"></p></div>
+</section>
+
+<section id="atomos">
+<div class="eyebrow">04 / Átomos</div><h2>Unidades básicas</h2>
+<div class="card"><h3>Botones</h3><div class="row"><button>Primario</button><button class="secondary">Secundario</button><button disabled>Desactivado</button></div><p class="muted">Altura mínima 44 px; foco visible; primario relleno y secundario con borde.</p></div>
+<div class="card" style="margin-top:12px"><h3>Enlaces</h3><p><a href="#datos-voz">Consultar metodología y datos</a></p><p class="muted">Los enlaces se distinguen por texto y subrayado, no solo por color.</p></div>
+<div class="card" style="margin-top:12px"><h3>Etiquetas</h3><div class="row"><span class="tag">Fuente INE</span><span class="tag">Trimestre móvil</span><span class="tag ok">Revisado</span><span class="tag example">Ejemplo ficticio</span></div></div>
+<div class="card" style="margin-top:12px"><h3>Campo y selector</h3><div class="field"><label for="atomRegion">Región</label><select id="atomRegion"><option>Los Ríos</option><option>Los Lagos</option><option>Metropolitana</option></select></div></div>
+<div class="card" style="margin-top:12px"><h3>Cifra principal</h3><div class="number">8,4 %</div><span class="tag example">Ejemplo ficticio</span><p class="muted">Georgia · 64 px escritorio · 44 px teléfono · alineación izquierda.</p></div>
+</section>
+
+<section id="moleculas">
+<div class="eyebrow">05 / Moléculas</div><h2>Combinaciones funcionales</h2>
+<div class="grid two">
+<div class="card"><span class="label">Tasa de desempleo</span><div class="number small" id="moleculeRate">8,4 %</div><span class="tag example">Ejemplo ficticio</span><p class="muted">Los Ríos · [trimestre móvil]</p></div>
+<div class="card"><span class="label">Variación interanual</span><div class="number small">+0,3 pp</div><p class="muted">Respecto del mismo trimestre móvil del año anterior.</p></div>
+<div class="card"><span class="label">Comparación nacional</span><div class="number small">+0,6 pp</div><p class="muted">Diferencia respecto de Chile.</p></div>
+<div class="card"><span class="label">Fuente</span><b>INE · ENE</b><p class="muted">[Trimestre móvil] · [Boletín]</p><a href="#datos-voz">Consultar publicación original</a></div>
+</div>
+<div class="card" style="margin-top:12px"><h3>Leyenda cromática</h3><div class="legend"><i style="background:#FBE3E0"></i><i style="background:#F4B8B0"></i><i style="background:#E88B80"></i><i style="background:#C8402F"></i><i style="background:#B42318"></i></div><div class="spread"><small>Menor tasa</small><small>Mayor tasa</small></div><p class="muted">Los intervalos numéricos se calculan según las tasas observadas en las 16 regiones para el período.</p></div>
+</section>
+
+<section id="organismos">
+<div class="eyebrow">06 / Organismos</div><h2>Componentes de página</h2>
+<div class="card"><h3>Cabecera y navegación</h3><p>Identidad del producto, acceso a regiones, comparación y datos. En móvil se compacta en un menú.</p></div>
+<div class="card" style="margin-top:12px"><h3>Ficha regional y comparativa</h3><p>Reúne tasa, variación interanual y diferencia con el promedio nacional en tarjetas independientes.</p></div>
+<div class="card" style="margin-top:12px"><h3>Mapa de las 16 regiones</h3><p class="muted">Prototipo esquemático de selección, no cartografía oficial ni geográficamente precisa.</p><div class="map" id="regionalMap" aria-label="Selector esquemático de las 16 regiones de Chile"></div><div class="legend" style="margin-top:10px"><i style="background:#FBE3E0"></i><i style="background:#F4B8B0"></i><i style="background:#E88B80"></i><i style="background:#C8402F"></i><i style="background:#B42318"></i></div><div class="spread"><small>Menor tasa</small><small>Mayor tasa</small></div><p id="mapSelection" aria-live="polite" class="muted">Región seleccionada: Los Ríos · 8,4 % (ejemplo ficticio).</p></div>
+<div class="card" style="margin-top:12px"><h3>Comparación interactiva</h3><div class="grid two"><div class="field"><label for="primaryRegion">Región principal</label><select id="primaryRegion"></select></div><div class="field"><label for="compareRegion">Comparar con</label><select id="compareRegion"><option value="Chile">Chile</option></select></div></div><div class="grid two" style="margin-top:12px"><div><small class="muted">Principal</small><div class="number small" id="primaryRate">8,4 %</div></div><div><small class="muted">Comparación</small><div class="number small" id="compareRate">7,8 %</div></div></div><p id="difference" aria-live="polite">Diferencia: +0,6 puntos porcentuales.</p><span class="tag example">Todos los datos son ficticios</span></div>
+<div class="card" style="margin-top:12px"><h3>Gráfico de evolución</h3><p class="muted">Ilustración conceptual. No representa una serie estadística real.</p><svg class="chart" viewBox="0 0 640 190" role="img" aria-label="Gráfico ilustrativo de una serie ficticia de tasa de desempleo"><g stroke="#C9C4B8" stroke-dasharray="4 4"><path d="M35 30H620M35 70H620M35 110H620M35 150H620"/></g><polyline points="40,120 150,95 260,108 370,65 480,80 600,42" fill="none" stroke="#B42318" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><g fill="#B42318"><circle cx="40" cy="120" r="5"/><circle cx="150" cy="95" r="5"/><circle cx="260" cy="108" r="5"/><circle cx="370" cy="65" r="5"/><circle cx="480" cy="80" r="5"/><circle cx="600" cy="42" r="5"/></g><g fill="#5B6068" font-size="12"><text x="40" y="176">T1</text><text x="150" y="176">T2</text><text x="260" y="176">T3</text><text x="370" y="176">T4</text><text x="480" y="176">T5</text><text x="600" y="176">T6</text></g></svg></div>
+<div class="card" style="margin-top:12px"><h3>Tabla de las 16 regiones</h3><p class="muted">Orden inicial: menor a mayor tasa. Valores inventados para demostrar la interfaz.</p><div class="table-wrap"><table id="regionalTable"><thead><tr><th>Región</th><th>Tasa</th></tr></thead><tbody></tbody></table></div><button id="downloadCsv" style="margin-top:12px">Descargar CSV de ejemplo</button></div>
+<div class="card" style="margin-top:12px"><h3>Nota y pie editorial</h3><div class="note"><b>Los Ríos registra una tasa de desempleo de 8,4 %.</b><p>La cifra representa una variación de +0,3 puntos porcentuales respecto del mismo trimestre móvil del año anterior.</p><small>Ejemplo ficticio · Fuente: INE · ENE · [período].</small></div><hr><p><b>Aprobado por:</b> [nombre y apellido]</p><p class="muted">La IA automatiza vigilancia, extracción y preparación de textos. Una persona revisa y aprueba antes de publicar.</p></div>
+</section>
+
+<section id="plantillas">
+<div class="eyebrow">07 / Plantillas y páginas</div><h2>Primera pantalla adaptable</h2>
+<div class="tabs" role="group" aria-label="Ancho de vista previa"><button data-preview="mobile" aria-pressed="true">Teléfono · 390 px</button><button data-preview="desktop" aria-pressed="false">Escritorio · 760 px</button></div>
+<div class="preview-shell" id="previewShell" style="margin-top:14px"><div class="preview-page" id="previewPage">
+<div class="spread"><b style="font-family:Georgia">[NOMBRE]</b><span>☰</span></div><hr>
+<small class="label">Explorador regional</small><h3>Desempleo en Chile</h3>
+<div class="field"><label>Región principal</label><select disabled><option>Los Ríos</option></select></div>
+<div class="field" style="margin-top:8px"><label>Comparar con</label><select disabled><option>Chile</option></select></div>
+<p class="label" style="margin-top:18px">Tasa de desempleo</p><div class="number" style="font-size:44px">8,4 %</div><span class="tag example">Ejemplo ficticio</span>
+<div class="grid two" style="margin-top:14px"><div class="card"><small>Variación anual</small><h3>+0,3 pp</h3></div><div class="card"><small>Diferencia con Chile</small><h3>+0,6 pp</h3></div></div>
+<h3 style="margin-top:18px">Explorador regional</h3><div class="map"><div class="region">Norte</div><div class="region">Centro</div><div class="region">Sur</div><div class="region">Austral</div></div>
+<small class="muted">Fuente: INE · ENE · [trimestre móvil]</small>
+</div></div>
+<div class="card" style="margin-top:14px"><h3>Plantilla vacía</h3><div class="skeleton" style="height:12px;width:42%;margin:10px 0"></div><div class="skeleton" style="height:42px;width:65%;margin:10px 0"></div><div class="grid two"><div class="skeleton" style="height:72px"></div><div class="skeleton" style="height:72px"></div></div><div class="skeleton" style="height:170px;margin-top:12px"></div><p class="muted">Los esqueletos reservan espacio mientras se cargan los datos; no muestran cifras provisionales.</p></div>
+<div class="card" style="margin-top:14px"><h3>Página con datos de ejemplo</h3><span class="tag example">Datos ficticios</span><div class="number small">8,4 %</div><p>Los Ríos · período ilustrativo</p><p>Variación interanual: +0,3 pp.</p><p>Fuente: INE · ENE · período ilustrativo.</p></div>
+</section>
+
+<section id="estados">
+<div class="eyebrow">08 / Estados</div><h2>Estados de datos e interacción</h2>
+<div class="card"><h3>Estados de datos</h3><div class="tabs" id="stateTabs"><button data-state="loading" aria-pressed="true">Cargando</button><button data-state="empty" aria-pressed="false">Sin datos</button><button data-state="error" aria-pressed="false">Error</button><button data-state="unknown" aria-pressed="false">No consta</button></div><div class="state-box" id="stateDisplay" style="margin-top:12px" aria-live="polite"></div></div>
+<div class="card" style="margin-top:12px"><h3>Estados de controles</h3><p>Normal, hover, active, focus y disabled. Prueba Tab para recorrer los elementos y observar el foco.</p><div class="row"><button>Normal / hover</button><button class="secondary">Secundario</button><button disabled>Disabled</button></div><div class="field" style="margin-top:12px"><label for="stateSelect">Selector con foco por teclado</label><select id="stateSelect"><option>Los Ríos</option><option>Los Lagos</option></select></div></div>
+<div class="card" style="margin-top:12px"><h3>Reglas</h3><ul><li>No mostrar cifras anteriores como actuales.</li><li>Explicar errores sin inventar causas.</li><li>Distinguir «Sin datos» de «No consta».</li><li>Foco visible en todos los controles.</li><li>Usar texto y forma además del color.</li></ul></div>
+</section>
+
+<section id="datos-voz">
+<div class="eyebrow">09 / Datos y voz</div><h2>Formato estadístico y lenguaje</h2>
+<div class="card"><h3>Escala relativa</h3><div class="swatches"><div><div class="swatch" style="background:#FBE3E0"></div><small>1</small></div><div><div class="swatch" style="background:#F4B8B0"></div><small>2</small></div><div><div class="swatch" style="background:#E88B80"></div><small>3</small></div><div><div class="swatch" style="background:#C8402F"></div><small>4</small></div><div><div class="swatch" style="background:#B42318"></div><small>5</small></div></div><p class="muted">Cinco niveles relativos a la distribución de tasas de las regiones en el período analizado. No expresa valoración.</p></div>
+<div class="card" style="margin-top:12px"><h3>Formatos</h3><div class="table-wrap"><table><thead><tr><th>Elemento</th><th>Formato</th></tr></thead><tbody><tr><td>Tasa</td><td>8,4 %</td></tr><tr><td>Variación</td><td>+0,3 pp</td></tr><tr><td>Diferencia</td><td>−0,6 pp</td></tr><tr><td>Dato no informado</td><td>— + explicación</td></tr></tbody></table></div><p>Coma decimal, un decimal, espacio antes de %, variaciones en puntos porcentuales.</p></div>
+<div class="card" style="margin-top:12px"><h3>Períodos y fuentes</h3><p>Separar trimestre móvil de fecha de publicación. Toda cifra incluye INE, ENE, trimestre móvil y enlace al boletín correspondiente.</p></div>
+<div class="card" style="margin-top:12px"><h3>Voz editorial</h3><div class="grid two"><div><b>Usar</b><p>«La tasa alcanzó 8,4 %»</p><p>«Aumentó 0,3 puntos porcentuales»</p></div><div><b>Evitar</b><p>«La tasa se disparó»</p><p>«Empeoró el desempleo»</p></div></div><p>Lenguaje claro, informativo, sin adjetivos valorativos, causas ni proyecciones.</p></div>
+<div class="card" style="margin-top:12px"><h3>Textos de ayuda</h3><p><b>Tasa:</b> porcentaje de personas desocupadas respecto de la fuerza de trabajo, según definición ENE.</p><p><b>Variación interanual:</b> diferencia en puntos porcentuales respecto del mismo trimestre móvil del año anterior.</p><p><b>Trimestre móvil:</b> período de tres meses consecutivos.</p></div>
+</section>
+
+<section id="accesibilidad">
+<div class="eyebrow">10 / Accesibilidad e IA</div><h2>Accesibilidad y transparencia editorial</h2>
+<div class="card"><h3>Contraste</h3><p>Relación mínima 4,5:1 para texto normal. El informe calculado se presenta en la sección de tokens y se actualiza con JavaScript.</p></div>
+<div class="card" style="margin-top:12px"><h3>Teclado y foco</h3><p>Todos los controles se operan con teclado; el orden sigue la lectura y el foco tiene contorno visible. Botones con altura mínima de 44 px.</p></div>
+<div class="card" style="margin-top:12px"><h3>Mapa y gráficos</h3><p>Nombre, tasa, estado y selección disponibles sin depender solo del color. Los gráficos incluyen título y alternativa tabular o textual.</p></div>
+<div class="card" style="margin-top:12px"><h3>Texto alternativo</h3><p>Las imágenes informativas tienen descripciones útiles; las decorativas usan alternativa vacía. El mapa tiene descripción y tabla complementaria.</p></div>
+<div class="footer"><h3>Transparencia sobre el uso de IA</h3><p>Este producto utiliza inteligencia artificial para vigilar publicaciones del INE, extraer cifras y preparar textos informativos. Los datos y contenidos son revisados y aprobados por una persona antes de su publicación.</p><hr style="border-color:#5B6068"><b>Aprobado por: [nombre y apellido]</b><p><small style="color:#d2d2d2">[Fecha y hora de aprobación]</small></p></div>
+<div class="card" style="margin-top:14px"><h3>Control de calidad</h3><div id="qualityList" class="checklist"></div><p class="muted" id="qualityCount" aria-live="polite">0 elementos verificados.</p></div>
+</section>
+<footer style="padding:28px 0;color:var(--gray);font-size:13px">Design system · Explorador de desempleo regional en Chile. Prototipo autónomo, sin librerías externas. Los valores estadísticos de demostración son ficticios y no deben publicarse como datos oficiales.</footer>
+</main>
+</div>
+<script>
+const regions=[
+ ["Arica y Parinacota",7.1],["Tarapacá",8.0],["Antofagasta",7.5],["Atacama",8.2],
+ ["Coquimbo",7.6],["Valparaíso",8.1],["Metropolitana",8.4],["O'Higgins",7.3],
+ ["Maule",8.5],["Ñuble",8.8],["Biobío",8.2],["La Araucanía",9.0],
+ ["Los Ríos",8.4],["Los Lagos",7.8],["Aysén",6.9],["Magallanes",6.5]
+];
+const tokenColors=[["Papel","#F7F4EE"],["Tinta","#1B1B1F"],["Acento","#B42318"],["Gris","#5B6068"],["Línea","#C9C4B8"],["Blanco","#FFFFFF"]];
+const mapColors=["#FBE3E0","#F4B8B0","#E88B80","#C8402F","#B42318"];
+const colorTokens=document.getElementById("colorTokens");
+tokenColors.forEach(([name,value])=>{
+ const row=document.createElement("div");row.className="token";
+ row.innerHTML=`<span><b>${name}</b> · <code>${value}</code></span><button class="copy" type="button" data-copy="${value}">Copiar</button>`;
+ colorTokens.appendChild(row);
+});
+document.addEventListener("click",async e=>{
+ const b=e.target.closest("[data-copy]");if(!b)return;
+ try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent="Copiado";setTimeout(()=>b.textContent="Copiar",1200)}
+ catch{b.textContent=b.dataset.copy}
+});
+document.getElementById("copyAllTokens").addEventListener("click",async()=>{
+ const text=tokenColors.map(x=>x.join(": ")).join("\n")+"\nEscala mapa: "+mapColors.join(", ");
+ try{await navigator.clipboard.writeText(text);document.getElementById("copyAllTokens").textContent="Copiados"}
+ catch{alert(text)}
+});
+function luminance(hex){
+ const rgb=hex.replace("#","").match(/.{2}/g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));
+ return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];
+}
+function contrast(a,b){const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+const pairs=[["Tinta","Papel","#1B1B1F","#F7F4EE"],["Tinta","Blanco","#1B1B1F","#FFFFFF"],["Gris","Papel","#5B6068","#F7F4EE"],["Gris","Blanco","#5B6068","#FFFFFF"],["Acento","Papel","#B42318","#F7F4EE"],["Acento","Blanco","#B42318","#FFFFFF"]];
+const tbody=document.querySelector("#contrastTable tbody");let pass=0;
+pairs.forEach(([fg,bg,a,b])=>{const ratio=contrast(a,b),ok=ratio>=4.5;if(ok)pass++;const tr=document.createElement("tr");tr.innerHTML=`<td>${fg}</td><td>${bg}</td><td>${ratio.toFixed(2)}:1</td><td><span class="tag ${ok?"ok":"error"}">${ok?"Cumple":"No cumple"}</span></td>`;tbody.appendChild(tr)});
+document.getElementById("contrastSummary").textContent=`${pass} de ${pairs.length} combinaciones cumplen el mínimo de 4,5:1.`;
+const map=document.getElementById("regionalMap");
+regions.forEach(([name,rate],i)=>{const btn=document.createElement("button");btn.className="region";btn.type="button";btn.innerHTML=`<b>${name}</b><span>${rate.toFixed(1).replace(".",",")} %</span>`;btn.setAttribute("aria-pressed",name==="Los Ríos"?"true":"false");btn.addEventListener("click",()=>{map.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));btn.setAttribute("aria-pressed","true");document.getElementById("mapSelection").textContent=`Región seleccionada: ${name} · ${rate.toFixed(1).replace(".",",")} % (ejemplo ficticio).`;document.getElementById("primaryRegion").value=name;updateComparison()});map.appendChild(btn)});
+const primary=document.getElementById("primaryRegion"),compare=document.getElementById("compareRegion");
+regions.forEach(([name])=>{primary.add(new Option(name,name));compare.add(new Option(name,name))});
+primary.value="Los Ríos";compare.value="Los Lagos";
+const rates=Object.fromEntries(regions);
+function fmt(n){return n.toFixed(1).replace(".",",")+" %"}
+function updateComparison(){
+ const p=primary.value,c=compare.value,pr=rates[p],cr=c==="Chile"?7.8:rates[c];
+ document.getElementById("primaryRate").textContent=fmt(pr);
+ document.getElementById("compareRate").textContent=fmt(cr);
+ const d=pr-cr,sign=d>0?"+":d<0?"−":"";
+ document.getElementById("difference").textContent=`Diferencia: ${sign}${Math.abs(d).toFixed(1).replace(".",",")} puntos porcentuales. (Ejemplo ficticio)`;
+ document.getElementById("mapSelection").textContent=`Región seleccionada: ${p} · ${fmt(pr)} (ejemplo ficticio).`;
+}
+primary.addEventListener("change",updateComparison);compare.addEventListener("change",updateComparison);updateComparison();
+const sorted=[...regions].sort((a,b)=>a[1]-b[1]);
+const tableBody=document.querySelector("#regionalTable tbody");
+sorted.forEach(([name,rate])=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${name}</td><td>${fmt(rate)}</td>`;tableBody.appendChild(tr)});
+document.getElementById("downloadCsv").addEventListener("click",()=>{
+ const csv="Region,Tasa de desempleo (%)\\n"+sorted.map(([n,r])=>`"${n}",${r.toFixed(1)}`).join("\\n");
+ const blob=new Blob(["\\ufeff"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="tasas-regionales-ejemplo-ficticio.csv";a.click();URL.revokeObjectURL(url);
+});
+document.querySelectorAll("[data-preview]").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll("[data-preview]").forEach(x=>x.setAttribute("aria-pressed",String(x===btn)));
+ const shell=document.getElementById("previewShell"),page=document.getElementById("previewPage");
+ if(btn.dataset.preview==="mobile"){shell.style.maxWidth="390px";page.querySelector(".number").style.fontSize="44px"}
+ else{shell.style.maxWidth="790px";page.querySelector(".number").style.fontSize="64px"}
+}));
+const stateDisplay=document.getElementById("stateDisplay");
+const states={
+ loading:'<div class="skeleton" style="height:12px;width:42%;margin-bottom:12px"></div><div class="skeleton" style="height:38px;width:65%;margin-bottom:12px"></div><p class="muted">Consultando los datos del INE…</p>',
+ empty:'<span class="tag">Sin datos</span><h3>No hay datos para esta consulta.</h3><p class="muted">No se encontró información para la región y período seleccionados.</p>',
+ error:'<span class="tag error">Error</span><h3>No fue posible cargar los datos.</h3><p class="muted">Intenta nuevamente más tarde.</p><button id="retryState">Reintentar</button>',
+ unknown:'<span class="tag example">No consta</span><div class="number small" style="color:var(--gray)">—</div><p class="muted">El dato no consta en la publicación consultada.</p>'
+};
+function setState(s){stateDisplay.innerHTML=states[s];document.querySelectorAll("[data-state]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.state===s)));const retry=document.getElementById("retryState");if(retry)retry.addEventListener("click",()=>setState("loading"))}
+document.querySelectorAll("[data-state]").forEach(b=>b.addEventListener("click",()=>setState(b.dataset.state)));setState("loading");
+const menu=document.getElementById("siteIndex"),toggle=document.getElementById("menuToggle");
+toggle.addEventListener("click",()=>{const open=menu.classList.toggle("open");toggle.setAttribute("aria-expanded",String(open))});
+menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{menu.classList.remove("open");toggle.setAttribute("aria-expanded","false")}));
+const quality=["Texto con contraste mínimo de 4,5:1","Navegación completa mediante teclado","Foco visible en todos los controles","Botones y controles con tamaño adecuado","Mapa accesible sin depender del color","Gráficos con alternativa textual o tabular","Textos alternativos en imágenes informativas","Estados de carga, error y ausencia diferenciados","Fuente INE y trimestre móvil asociados a cada cifra","Declaración visible del uso de IA","Nombre de la persona responsable de aprobación","Ninguna publicación automática sin revisión humana"];
+const qlist=document.getElementById("qualityList"),qcount=document.getElementById("qualityCount");
+quality.forEach((item,i)=>{const label=document.createElement("label"),input=document.createElement("input");input.type="checkbox";input.addEventListener("change",()=>{const n=qlist.querySelectorAll("input:checked").length;qcount.textContent=`${n} de ${quality.length} elementos marcados.`});label.append(input,document.createTextNode(item));qlist.appendChild(label)});
+</script>
+</body>
+</html>
